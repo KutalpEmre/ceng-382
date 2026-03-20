@@ -1,0 +1,38 @@
+@page
+@model Ceng382.Pages.PrivacyModel
+@{
+    ViewData["Title"] = "Privacy Policy";
+}
+
+<div class="pg-head">
+    <h1 class="pg-title">Privacy Policy</h1>
+    <p class="pg-sub">Last updated @DateTime.Now.Year</p>
+</div>
+
+<div class="card" style="max-width:680px;">
+    <div class="ch">
+        <span class="ch-dot" style="background:#8b5cf6;"></span>
+        <span class="ch-title">Data Usage</span>
+    </div>
+    <div class="cb">
+        <p class="sec-text" style="margin-bottom:1rem;">
+            This application is a university lab project (CENG 382). It collects minimal user data only for authentication and feature demonstration.
+        </p>
+
+        <p class="sec-label">What we collect</p>
+        <ul class="sec-list">
+            <li>Email address and hashed password for authentication.</li>
+            <li>Optional full name and profile photo provided at registration.</li>
+            <li>Images uploaded through the gallery feature.</li>
+        </ul>
+
+        <p class="sec-label">How it's used</p>
+        <ul class="sec-list">
+            <li>User identity and session management only.</li>
+            <li>Displaying uploaded content within the application interface.</li>
+        </ul>
+
+        <p class="sec-label">Storage</p>
+        <p class="sec-text">All data is stored in a local SQLite database on the server. No data is shared with third parties.</p>
+    </div>
+</div>

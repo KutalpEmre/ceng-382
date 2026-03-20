@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet build:*)",
+      "Bash(xargs sed:*)",
+      "Bash(cp MyRazorAuthApp.csproj Ceng382.csproj)",
+      "Bash(rm MyRazorAuthApp.csproj)",
+      "Bash(powershell -Command \"Get-ChildItem -Path Migrations -Filter ''*.cs'' | ForEach-Object { \\(Get-Content $_.FullName\\) -replace ''MyRazorAuthApp'',''Ceng382'' | Set-Content $_.FullName }\")",
+      "Bash(powershell -Command \"Rename-Item -Path ''C:\\\\Users\\\\kutal\\\\OneDrive\\\\Masaüstü\\\\week 4\\\\MyRazorAuthApp'' -NewName ''Ceng382''\")",
+      "Bash(grep -rn \"^\\\\s*//\" \"c:/Users/kutal/OneDrive/Masaüstü/week 4/Ceng382\" --include=\"*.cs\" --include=\"*.cshtml\")",
+      "Bash(dotnet new:*)",
+      "Bash(\"c:/Users/kutal/OneDrive/Masaüstü/week 4/Ceng382/.gitignore\")",
+      "WebFetch(domain:github.com)"
+    ]
+  }
+}

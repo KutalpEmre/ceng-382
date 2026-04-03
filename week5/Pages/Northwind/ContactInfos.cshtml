@@ -1,0 +1,125 @@
+@page
+@model Ceng382.Pages.Northwind.ContactInfosModel
+@{
+    ViewData["Title"] = "Contacts";
+    var total = Model.Customers.Count + Model.Suppliers.Count + Model.Shippers.Count;
+}
+
+<div class="pg-head">
+    <h1 class="pg-title">Contacts</h1>
+    <p class="pg-sub">Northwind <code>Customers</code>, <code>Suppliers</code> ve <code>Shippers</code> tablolarındaki iletişim bilgileri (<code>instnwnd.sql</code> şeması).</p>
+</div>
+
+<div class="stats-row">
+    <div class="stat-box pink">
+        <div class="stat-label">Customers</div>
+        <div class="stat-val">@Model.Customers.Count</div>
+    </div>
+    <div class="stat-box blue">
+        <div class="stat-label">Suppliers</div>
+        <div class="stat-val">@Model.Suppliers.Count</div>
+    </div>
+    <div class="stat-box purple">
+        <div class="stat-label">Shippers</div>
+        <div class="stat-val">@Model.Shippers.Count</div>
+    </div>
+    <div class="stat-box" style="border-color:#334155;">
+        <div class="stat-label">Total rows</div>
+        <div class="stat-val">@total</div>
+    </div>
+</div>
+
+<div class="card" style="margin-bottom:1.5rem;">
+    <div class="ch">
+        <span class="ch-dot" style="background:#f472b6;"></span>
+        <span class="ch-title">Customers</span>
+        <span class="ch-badge">dbo.Customers</span>
+    </div>
+    <table class="users-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Company</th>
+                <th>Contact</th>
+                <th>Title</th>
+                <th>City</th>
+                <th>Country</th>
+                <th>Phone</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var c in Model.Customers)
+            {
+                <tr>
+                    <td style="color:#f472b6;font-weight:600;font-size:0.8rem;">@c.CustomerID.Trim()</td>
+                    <td>@c.CompanyName</td>
+                    <td style="color:#94a3b8;font-size:0.8rem;">@(c.ContactName ?? "—")</td>
+                    <td style="color:#64748b;font-size:0.8rem;">@(c.ContactTitle ?? "—")</td>
+                    <td style="color:#64748b;font-size:0.8rem;">@(c.City ?? "—")</td>
+                    <td style="color:#64748b;font-size:0.8rem;">@(c.Country ?? "—")</td>
+                    <td style="color:#64748b;font-size:0.8rem;">@(c.Phone ?? "—")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="card" style="margin-bottom:1.5rem;">
+    <div class="ch">
+        <span class="ch-dot" style="background:#38bdf8;"></span>
+        <span class="ch-title">Suppliers</span>
+        <span class="ch-badge">dbo.Suppliers</span>
+    </div>
+    <table class="users-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Company</th>
+                <th>Contact</th>
+                <th>City</th>
+                <th>Country</th>
+                <th>Phone</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var s in Model.Suppliers)
+            {
+                <tr>
+                    <td style="color:#38bdf8;font-weight:600;font-size:0.8rem;">@s.SupplierID</td>
+                    <td>@s.CompanyName</td>
+                    <td style="color:#94a3b8;font-size:0.8rem;">@(s.ContactName ?? "—")</td>
+                    <td style="color:#64748b;font-size:0.8rem;">@(s.City ?? "—")</td>
+                    <td style="color:#64748b;font-size:0.8rem;">@(s.Country ?? "—")</td>
+                    <td style="color:#64748b;font-size:0.8rem;">@(s.Phone ?? "—")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <div class="ch">
+        <span class="ch-dot" style="background:#a78bfa;"></span>
+        <span class="ch-title">Shippers</span>
+        <span class="ch-badge">dbo.Shippers</span>
+    </div>
+    <table class="users-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Company</th>
+                <th>Phone</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var s in Model.Shippers)
+            {
+                <tr>
+                    <td style="color:#a78bfa;font-weight:600;font-size:0.8rem;">@s.ShipperID</td>
+                    <td>@s.CompanyName</td>
+                    <td style="color:#64748b;font-size:0.8rem;">@(s.Phone ?? "—")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,75 @@
+@page
+@model Ceng382.Pages.Northwind.OrdersModel
+@{
+    ViewData["Title"] = "Orders";
+}
+
+<div class="pg-head">
+    <h1 class="pg-title">Orders</h1>
+    <p class="pg-sub">Northwind siparişleri — müşteri ve çalışan bilgileriyle.</p>
+</div>
+
+<div class="stats-row">
+    <div class="stat-box pink">
+        <div class="stat-label">Total Orders</div>
+        <div class="stat-val">@Model.Orders.Count</div>
+    </div>
+    <div class="stat-box purple">
+        <div class="stat-label">Shipped</div>
+        <div class="stat-val">@Model.Orders.Count(o => o.ShippedDate != null)</div>
+    </div>
+    <div class="stat-box blue">
+        <div class="stat-label">Pending</div>
+        <div class="stat-val">@Model.Orders.Count(o => o.ShippedDate == null)</div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="ch">
+        <span class="ch-dot" style="background:#f59e0b;"></span>
+        <span class="ch-title">Order List</span>
+        <span class="ch-badge">@Model.Orders.Count total</span>
+    </div>
+    <table class="users-table">
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Employee</th>
+                <th>Order Date</th>
+                <th>Required Date</th>
+                <th>Shipped Date</th>
+                <th>Shipper</th>
+                <th>Ship Country</th>
+                <th>Freight</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var o in Model.Orders)
+            {
+                <tr>
+                    <td style="color:#f59e0b;font-weight:700;font-size:0.8rem;">#@o.OrderID</td>
+                    <td>@(o.Customer?.CompanyName ?? o.CustomerID ?? "—")</td>
+                    <td style="color:#94a3b8;font-size:0.8rem;">
+                        @(o.Employee != null ? $"{o.Employee.FirstName} {o.Employee.LastName}" : "—")
+                    </td>
+                    <td style="color:#64748b;font-size:0.8rem;">@(o.OrderDate?.ToString("yyyy-MM-dd") ?? "—")</td>
+                    <td style="color:#64748b;font-size:0.8rem;">@(o.RequiredDate?.ToString("yyyy-MM-dd") ?? "—")</td>
+                    <td style="font-size:0.8rem;">
+                        @if (o.ShippedDate != null)
+                        {
+                            <span style="color:#34d399;">@o.ShippedDate.Value.ToString("yyyy-MM-dd")</span>
+                        }
+                        else
+                        {
+                            <span style="color:#f59e0b;">Pending</span>
+                        }
+                    </td>
+                    <td style="color:#94a3b8;font-size:0.8rem;">@(o.Shipper?.CompanyName ?? "—")</td>
+                    <td style="color:#64748b;font-size:0.8rem;">@(o.ShipCountry ?? "—")</td>
+                    <td style="color:#34d399;font-size:0.8rem;">$@(o.Freight?.ToString("F2") ?? "—")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

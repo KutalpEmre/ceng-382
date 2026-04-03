@@ -1,0 +1,62 @@
+@page
+@model Ceng382.Pages.Northwind.EmployeesModel
+@{
+    ViewData["Title"] = "Employees";
+}
+
+<div class="pg-head">
+    <h1 class="pg-title">Employees</h1>
+    <p class="pg-sub">Northwind çalışanları — unvan ve iletişim bilgileriyle.</p>
+</div>
+
+<div class="stats-row">
+    <div class="stat-box pink">
+        <div class="stat-label">Total Employees</div>
+        <div class="stat-val">@Model.Employees.Count</div>
+    </div>
+    <div class="stat-box purple">
+        <div class="stat-label">Countries</div>
+        <div class="stat-val">@Model.Employees.Select(e => e.Country).Distinct().Count()</div>
+    </div>
+    <div class="stat-box blue">
+        <div class="stat-label">Cities</div>
+        <div class="stat-val">@Model.Employees.Select(e => e.City).Distinct().Count()</div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="ch">
+        <span class="ch-dot" style="background:#8b5cf6;"></span>
+        <span class="ch-title">Employee List</span>
+        <span class="ch-badge">@Model.Employees.Count total</span>
+    </div>
+    <table class="users-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Title</th>
+                <th>City</th>
+                <th>Country</th>
+                <th>Phone</th>
+                <th>Hire Date</th>
+                <th>Reports To</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var e in Model.Employees)
+            {
+                <tr>
+                    <td style="color:#475569;font-size:0.75rem;">@e.EmployeeID</td>
+                    <td>@e.TitleOfCourtesy @e.FirstName @e.LastName</td>
+                    <td style="color:#94a3b8;font-size:0.8rem;">@(e.Title ?? "—")</td>
+                    <td>@(e.City ?? "—")</td>
+                    <td style="color:#64748b;font-size:0.8rem;">@(e.Country ?? "—")</td>
+                    <td style="color:#64748b;font-size:0.8rem;">@(e.HomePhone ?? "—")</td>
+                    <td style="color:#64748b;font-size:0.8rem;">@(e.HireDate?.ToString("yyyy-MM-dd") ?? "—")</td>
+                    <td style="color:#64748b;font-size:0.8rem;">@(e.Manager != null ? $"{e.Manager.FirstName} {e.Manager.LastName}" : "—")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

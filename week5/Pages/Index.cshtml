@@ -1,0 +1,209 @@
+@page
+@model Ceng382.Pages.IndexModel
+@{
+    ViewData["Title"] = "Gallery";
+    int imgCount = Model.Images?.Count ?? 0;
+    int userCount = Model.Users?.Count ?? 0;
+}
+
+<div class="pg-head">
+    <h1 class="pg-title">Gallery</h1>
+    <p class="pg-sub">Upload and manage images, view registered users — powered by SQLite &amp; Northwind (SQL Server).</p>
+</div>
+
+<div class="stats-row" style="grid-template-columns:repeat(5,1fr);">
+    <div class="stat-box pink">
+        <div class="stat-label">Total Images</div>
+        <div class="stat-val">@imgCount</div>
+    </div>
+    <div class="stat-box purple">
+        <div class="stat-label">Registered Users</div>
+        <div class="stat-val">@userCount</div>
+    </div>
+    <div class="stat-box blue">
+        <div class="stat-label">Products</div>
+        <div class="stat-val" style="font-size:1.6rem;">@Model.ProductCount</div>
+    </div>
+    <div class="stat-box pink">
+        <div class="stat-label">Customers</div>
+        <div class="stat-val" style="font-size:1.6rem;">@Model.CustomerCount</div>
+    </div>
+    <div class="stat-box purple">
+        <div class="stat-label">Orders</div>
+        <div class="stat-val" style="font-size:1.6rem;">@Model.OrderCount</div>
+    </div>
+</div>
+
+<div class="grid-2">
+    <div class="card">
+        <div class="ch">
+            <span class="ch-dot" style="background:#22d3ee;"></span>
+            <span class="ch-title">Browser Preview</span>
+            <span class="ch-badge">JS only</span>
+        </div>
+        <div class="cb">
+            <p class="hint">Pick an image below — it shows instantly in the browser using FileReader. Nothing is saved to the database.</p>
+            <label class="form-label">Select image</label>
+            <input type="file" class="form-control" accept="image/*" multiple onchange="previewGalleryImages(this)" />
+            <div id="jsPreviewGrid" class="gallery-grid" style="display:none;margin-top:0.8rem;"></div>
+            <div id="previewPlaceholder" class="preview-area">
+                <div class="preview-empty">
+                    No image selected<br/>
+                    <span style="font-size:0.7rem;">Supports JPG, PNG, GIF, WebP — multiple selection supported</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="ch">
+            <span class="ch-dot" style="background:#34d399;"></span>
+            <span class="ch-title">Upload to Database</span>
+            <span class="ch-badge">C# / IFormFile</span>
+        </div>
+        <div class="cb">
+            <p class="hint">The file is received via <code style="font-size:0.75rem;background:rgba(255,255,255,0.07);border-radius:4px;padding:0.1em 0.35em;color:#c4b5fd;">IFormFile</code>, converted to a byte array with MemoryStream, and written to the SQLite database.</p>
+            <form method="post" enctype="multipart/form-data" asp-page-handler="UploadGallery">
+                <div class="mb-3">
+                    <label class="form-label">Select image</label>
+                    <input type="file" name="galleryFiles" class="form-control" accept="image/*" multiple required />
+                </div>
+                <button type="submit" class="btn btn-teal">Upload</button>
+            </form>
+
+            @if (imgCount > 0)
+            {
+                <hr class="divider" />
+                <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#475569;margin-bottom:0.5rem;">
+                    Saved (@imgCount)
+                </div>
+                <div class="gallery-grid">
+                    @foreach (var img in Model.Images!)
+                    {
+                        <div class="gimg" title="@img.FileName">
+                            <img src="data:@img.ContentType;base64,@Convert.ToBase64String(img.Data)" alt="@img.FileName" />
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="card" style="margin-bottom:1.5rem;">
+    <div class="ch">
+        <span class="ch-dot" style="background:#8b5cf6;"></span>
+        <span class="ch-title">Registered Users</span>
+        @if (userCount > 0)
+        {
+            <span class="ch-badge">@userCount total</span>
+        }
+    </div>
+    @if (userCount > 0)
+    {
+        <table class="users-table">
+            <thead>
+                <tr>
+                    <th>Photo</th>
+                    <th>Full Name</th>
+                    <th>Email</th>
+                    <th>Username</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var u in Model.Users!)
+                {
+                    <tr>
+                        <td>
+                            @if (u.ProfilePhoto != null)
+                            {
+                                <img class="avatar"
+                                     src="data:@u.ProfilePhotoType;base64,@Convert.ToBase64String(u.ProfilePhoto)"
+                                     alt="@u.FullName" />
+                            }
+                            else
+                            {
+                                <div class="avatar-init">
+                                    @(u.FullName?.Length > 0 ? u.FullName[0].ToString().ToUpper() : "?")
+                                </div>
+                            }
+                        </td>
+                        <td>@(u.FullName ?? "—")</td>
+                        <td style="color:#94a3b8;">@u.Email</td>
+                        <td style="color:#64748b;font-size:0.8rem;">@u.UserName</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="empty-state">No users registered yet.</div>
+    }
+</div>
+
+<div class="card" style="margin-bottom:1.5rem;">
+    <div class="ch">
+        <span class="ch-dot" style="background:#f59e0b;"></span>
+        <span class="ch-title">Northwind Quick Stats</span>
+        <span class="ch-badge">SQL Server</span>
+    </div>
+    <div class="cb">
+        <div class="stats-row" style="margin-bottom:0;">
+            <div class="stat-box blue">
+                <div class="stat-label">Products</div>
+                <div class="stat-val" style="font-size:1.5rem;">@Model.ProductCount</div>
+                <div style="font-size:0.68rem;color:#475569;margin-top:0.3rem;">
+                    <a asp-page="/Northwind/Products" style="color:#22d3ee;">View all →</a>
+                </div>
+            </div>
+            <div class="stat-box pink">
+                <div class="stat-label">Customers</div>
+                <div class="stat-val" style="font-size:1.5rem;">@Model.CustomerCount</div>
+                <div style="font-size:0.68rem;color:#475569;margin-top:0.3rem;">
+                    <a asp-page="/Northwind/Customers" style="color:#22d3ee;">View all →</a>
+                </div>
+            </div>
+            <div class="stat-box purple">
+                <div class="stat-label">Orders</div>
+                <div class="stat-val" style="font-size:1.5rem;">@Model.OrderCount</div>
+                <div style="font-size:0.68rem;color:#475569;margin-top:0.3rem;">
+                    <a asp-page="/Northwind/Orders" style="color:#22d3ee;">View all →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card" style="border-color:rgba(248,113,113,0.2);">
+    <div class="ch" style="border-color:rgba(248,113,113,0.15);">
+        <span class="ch-dot" style="background:#f87171;"></span>
+        <span class="ch-title" style="color:#fca5a5;">Security Analysis</span>
+    </div>
+    <div class="cb">
+        <div class="vuln-title">
+            Broken Access Control — Unauthenticated Access to Sensitive User Data
+        </div>
+
+        <p class="sec-label">Technical Cause &amp; Location</p>
+        <p class="sec-text">
+            The <code>IndexModel</code> class in <code>Pages/Index.cshtml.cs</code> has no <code>[Authorize]</code> attribute.
+            ASP.NET Core Identity only enforces access control on resources that explicitly opt in.
+            Because <code>IndexModel</code> does not declare this requirement, the middleware passes all requests through
+            regardless of authentication state. Both <code>_db.Users.ToList()</code> and <code>_db.Images.ToList()</code>
+            then execute fully, returning every row to whoever visits the page.
+        </p>
+
+        <p class="sec-label">Possible Consequences</p>
+        <ul class="sec-list">
+            <li>Unauthenticated visitors can enumerate all registered accounts and collect email addresses.</li>
+            <li>Profile photos are publicly accessible, breaching user privacy expectations.</li>
+            <li>The harvested email list can be used for phishing or credential-stuffing campaigns.</li>
+            <li>Gallery content that users assume is private is visible to anyone with the URL.</li>
+        </ul>
+
+        <div class="note-box">
+            No fix has been implemented for this vulnerability as per the lab requirements.
+        </div>
+    </div>
+</div>
